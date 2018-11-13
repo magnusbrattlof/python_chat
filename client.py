@@ -7,17 +7,22 @@ class Client:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection = (self.server, self.port)
 
-    def connect(self):
-        pass
+    def connect_to_server(self):
+        self.socket.connect(self.connection)
+        self.message_handler()
 
-port = 12345
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server = ('localhost', port)
+    def message_handler(self):
+        while True:
+            self.message = input("Message: ")
+            try:
+                self.socket.send(self.message.encode())
+                self.answer = self.socket.recv(1024)
+                print("Answer: {}".format(self.answer))
+            except Exception as e:
+                self.socket.close()
+                print(e)
+                return False
 
-s.connect(server)
-data = input("Message: ")
-s.send(data.encode())
-print("Waiting for receive data")
-response = s.recv(1024)
-print(response)
-s.close()
+
+if __name__ == '__main__':
+    Client('127.0.0.1', 12345).connect_to_server()
