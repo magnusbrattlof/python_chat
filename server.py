@@ -1,6 +1,10 @@
 from threading import Thread
 import socket
+import random
 import time
+
+
+responses = ["Bumfuzzle", "Cattywampus", "Gardyloo", "Taradiddle", "Snickersnee", "Widdershins"]
 
 class Server:
     def __init__(self, host, port):
@@ -18,13 +22,13 @@ class Server:
             Thread(target=self.client_handler, args=(client, address)).start()
 
     def client_handler(self, client, address):
-        packet_size = 1024
+        size = 1024
         while True:
             try:
-                data = client.recv(packet_size)
+                data = client.recv(size)
                 if data:
-                    # Wait for user to responde
-                    client.send(resp.encode())
+                    response = responses[random.randrange(len(responses))]
+                    client.send(response.encode())
                 else:
                     raise error("Something went wrong")
             except:
